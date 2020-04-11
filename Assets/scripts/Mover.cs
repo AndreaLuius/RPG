@@ -3,12 +3,11 @@ using UnityEngine.AI;
 
 public class Mover : MonoBehaviour
 {
-    private Ray lastRay;
-
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
             moveOnCursor();
+        movementAnimation();
     }
 
     private void moveOnCursor()
@@ -25,4 +24,18 @@ public class Mover : MonoBehaviour
         if(hasHit)
             GetComponent<NavMeshAgent>().SetDestination(raycastHit.point);
     }
+
+    private void movementAnimation()
+    {
+        Vector3 velocity = GetComponent<NavMeshAgent>().velocity;
+        /*transform a passed velocity from global to local
+        and its useful using the animator because it just cares
+        about the local velocity to work*/
+        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
+        /*we use the z axis base on movement animation*/
+        float speed = localVelocity.z;
+        GetComponent<Animator>().SetFloat("speed",speed);
+    }
+
+
 }
