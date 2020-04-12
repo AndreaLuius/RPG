@@ -717,6 +717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 2
+  timeBetweenAttacks: 4
 --- !u!114 &811480637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1934,6 +1935,7 @@ GameObject:
   - component: {fileID: 2135817720}
   - component: {fileID: 2135817719}
   - component: {fileID: 2135817723}
+  - component: {fileID: 2135817724}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -2027,6 +2029,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3655aa22716747ae87c280fcc94e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2135817724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135817718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c7d733ba56d5a4c95714ff71cab8b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healt: 100
 --- !u!1001 &79665030211004273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2158,6 +2173,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1342909185641683986, guid: 861399ecc7e12784cb722240391ba29f,
+        type: 3}
+      propertyPath: m_AngularSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1342909185641683987, guid: 861399ecc7e12784cb722240391ba29f,
         type: 3}
       propertyPath: m_Name
