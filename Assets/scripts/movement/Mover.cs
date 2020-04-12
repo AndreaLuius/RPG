@@ -36,6 +36,8 @@ namespace RPG.Movement
 
         public void startMoving(Vector3 destination, float range)
         {
+            GetComponent<Animator>().SetTrigger("stopAttacking");
+
             navMesh.SetDestination(destination);
             navMesh.stoppingDistance = range;
         }

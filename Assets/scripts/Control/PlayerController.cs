@@ -50,7 +50,8 @@ namespace RPG.Control
            {
                 CombatTarget target = ray.transform.GetComponent<CombatTarget>();
                 if(target == null) continue;
-
+                //if the target is dead dont process it in the ray cast
+                if(target.transform.GetComponent<Healt>().isDead) continue;
                 if(Input.GetMouseButtonDown(0))
                     fighter.startAttack(target);
 
