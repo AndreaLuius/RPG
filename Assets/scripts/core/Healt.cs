@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RPG.Combat
+namespace RPG.Core
 {
     public class Healt : MonoBehaviour {
 
@@ -29,6 +29,7 @@ namespace RPG.Combat
             {
                 GetComponent<Animator>().SetTrigger("die");
                 isDead = true;
+                GetComponent<ActionScheduler>().straigthStopAction();
             } 
         }
     }

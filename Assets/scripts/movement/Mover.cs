@@ -8,6 +8,7 @@ namespace RPG.Movement
     {
         public NavMeshAgent navMesh;
         private Animator animator;
+        private Healt healt;
         private bool canceler = true;
     
 
@@ -15,10 +16,12 @@ namespace RPG.Movement
         {
             navMesh = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            healt = GetComponent<Healt>();
         }
 
         private void Update()
         {
+            if(healt.isDead) navMesh.enabled = false;
             movementAnimation();
         }
 

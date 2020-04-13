@@ -13,15 +13,15 @@ namespace RPG.Combat
         private ActionScheduler scheduler;
         private bool atThePosition = false;
         private Animator animator;
-        private float lastAttackTime = 0;
+        private float lastAttackTime = Mathf.Infinity;//the first attack shouldnt wait
     
 
         public bool canTarget()
         {
-            if(target == null) return false;
-            if(target.isDead) return false;
+            if(target == null) return true;
+            if(target.isDead) return true;
 
-            return true;
+            return false;
         }
 
         private void Start()
@@ -52,7 +52,7 @@ namespace RPG.Combat
             return Vector3.Distance(transform.position,target.transform.position) < range;
         }
 
-        public void startAttack(CombatTarget combatTarget)
+        public void startAttack(GameObject combatTarget)
         {
             scheduler.startAction(this);
             target = combatTarget.GetComponent<Healt>();

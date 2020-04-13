@@ -1,5 +1,5 @@
 using UnityEngine;
-//do not used yet
+
 namespace RPG.Core
 {
     public class ActionScheduler : MonoBehaviour
@@ -13,6 +13,11 @@ namespace RPG.Core
             if(currentAction != null)
                 currentAction.stopExecution();
             currentAction = action;
+        }
+
+        public void straigthStopAction()
+        {
+            startAction(null);
         }
     }
 }

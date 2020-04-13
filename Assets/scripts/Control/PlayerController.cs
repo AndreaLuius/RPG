@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using RPG.Movement;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -13,17 +14,18 @@ namespace RPG.Control
         so this differenciation will have sense*/
         private Fighter fighter;
         private Mover mover;
+        private Healt healt;
 
         private void Start()
         {
             fighter = GetComponent<Fighter>();   
             mover = GetComponent<Mover>();
+            healt = GetComponent<Healt>();
         }
 
         void Update()
         { 
-            if(combatInteraction()) return;
-            if(moveToCursor()) return;
+            if(combatInteraction() || moveToCursor() || healt.isDead) return;
         }
 
         private bool moveToCursor()
@@ -53,7 +55,7 @@ namespace RPG.Control
                 //if the target is dead dont process it in the ray cast
                 if(target.transform.GetComponent<Healt>().isDead) continue;
                 if(Input.GetMouseButtonDown(0))
-                    fighter.startAttack(target);
+                    fighter.startAttack(target.gameObject);
 
                 return true;
            }

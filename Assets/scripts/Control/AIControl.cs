@@ -1,22 +1,36 @@
 using UnityEngine;
+using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
     public class AIControl : MonoBehaviour
     {
         [SerializeField] float chaseTargetRange = 10f;
+        private GameObject player;
+        private Fighter fighter;
+        private Healt healt;
 
-        private void Update() {
-
-            if(chaseDistanceControl())
-                print($"{this.name}should chase jim!");
+        void Start()
+        {
+            player = GameObject.FindWithTag("Player");
+            fighter = GetComponent<Fighter>();
+            healt = GetComponent<Healt>();
         }
 
-        private bool chaseDistanceControl()
+        private void Update() {
+            if(healt.isDead) return;
+
+            if(chaseDistanceControl() < chaseTargetRange)
+                fighter.startAttack(player);
+            else
+                fighter.stopExecution();
+        }
+
+        private float chaseDistanceControl()
         {
-            GameObject player = GameObject.FindWithTag("Player");
             return Vector3.Distance(transform.position,
-                     player.transform.position) < chaseTargetRange;
+                     player.transform.position);
         }
 
         void OnDrawGizmos()
