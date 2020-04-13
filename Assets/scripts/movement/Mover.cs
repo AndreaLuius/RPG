@@ -22,6 +22,7 @@ namespace RPG.Movement
         private void Update()
         {
             if(healt.isDead) navMesh.enabled = false;
+            
             movementAnimation();
         }
 
