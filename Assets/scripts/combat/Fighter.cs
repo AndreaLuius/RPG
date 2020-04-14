@@ -8,11 +8,12 @@ namespace RPG.Combat
     {
         [SerializeField] float range = 2f;
         [SerializeField][Range(0.5f,4f)]float timeBetweenAttacks = 1f;
+        [SerializeField] float fighterSpeed = .8f;
         private Healt target;
         private Mover mover;
+        private Animator animator;
         private ActionScheduler scheduler;
         private bool atThePosition = false;
-        private Animator animator;
         private float lastAttackTime = Mathf.Infinity;//the first attack shouldnt wait
     
 
@@ -39,12 +40,11 @@ namespace RPG.Combat
 
             if(!rangeControl())
             {
-                mover.startMoving(target.transform.position, range);
+                mover.startMoving(target.transform.position, range,fighterSpeed);
                 atThePosition = true;
             }
             else
                 attackBehavior();
-            
         }
 
         private bool rangeControl()

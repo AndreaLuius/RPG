@@ -6,6 +6,7 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour,IAction
     {
+        [SerializeField] float maxSpeed = 5.6f;
         public NavMeshAgent navMesh;
         private Animator animator;
         private Healt healt;
@@ -38,18 +39,19 @@ namespace RPG.Movement
             animator.SetFloat("speed", speed);
         }
 
-        public void startMoving(Vector3 destination, float range)
+        public void startMoving(Vector3 destination, float range,float speed)
         {
             GetComponent<Animator>().SetTrigger("stopAttacking");
 
+            navMesh.speed = maxSpeed * Mathf.Clamp01(speed);
             navMesh.SetDestination(destination);
             navMesh.stoppingDistance = range;
         }
 
-        public void startMoveAction(Vector3 destination,float range)
+        public void startMoveAction(Vector3 destination,float range,float speed)
         {
             GetComponent<ActionScheduler>().startAction(this);
-            startMoving(destination,range);
+            startMoving(destination,range,speed);
         }
 
         public void stopExecution()

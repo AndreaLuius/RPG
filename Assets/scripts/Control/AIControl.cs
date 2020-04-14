@@ -11,6 +11,7 @@ namespace RPG.Control
         [SerializeField] float chaseTargetRange = 10f;
         [SerializeField] float suspiciosTime = 4f;
         [SerializeField] float patrolTime = 5f;
+        [SerializeField] [Range(0.1f,0.5f)]float patrolSpeed = 0.5f;
         [SerializeField] PatrolPath patrol;
         private GameObject player;
         private Fighter fighter;
@@ -72,7 +73,7 @@ namespace RPG.Control
                      waypointCounter = 0;
 
                 if (timeSinceLastPatrol >= patrolTime)
-                    mover.startMoveAction(nextPosition, 0f);
+                    mover.startMoveAction(nextPosition, 0f,patrolSpeed);
             }
         }
 

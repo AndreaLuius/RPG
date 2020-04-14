@@ -12,6 +12,7 @@ namespace RPG.Control
         a position to move we dont have attack (at the same time)
         later on we will set that as a (attack cursor and move cursor)
         so this differenciation will have sense*/
+        [SerializeField] float playerSpeed = 1f;
         private Fighter fighter;
         private Mover mover;
         private Healt healt;
@@ -36,7 +37,7 @@ namespace RPG.Control
             if (hasHit)
             {
                 if(Input.GetMouseButton(0))
-                    mover.startMoveAction(raycastHit.point,0f);
+                    mover.startMoveAction(raycastHit.point,0f,playerSpeed);
                 
                 return true;
             }
