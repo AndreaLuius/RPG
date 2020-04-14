@@ -10,16 +10,17 @@ namespace RPG.Control
     {
         [SerializeField] float chaseTargetRange = 10f;
         [SerializeField] float suspiciosTime = 4f;
+        [SerializeField] float patrolTime = 5f;
         [SerializeField] PatrolPath patrol;
         private GameObject player;
         private Fighter fighter;
         private Healt healt;
         private Mover mover;
         private ActionScheduler scheduler;
-        private Vector3 ownBaseLocation;
+        private Vector3 ownBaseLocation,nextPosition;
+        private int waypointCounter = 0;
         private float timeSinceLastChase = Mathf.Infinity;
-        private Vector3 nextPosition;
-        int waypointCounter = 0;
+        private float timeSinceLastPatrol = Mathf.Infinity;
 
 
         void Start()
@@ -50,13 +51,10 @@ namespace RPG.Control
                 if(timeSinceLastChase < suspiciosTime)
                     scheduler.straigthStopAction();
                 else
-                {
                     patrolControl();
-                }
-                    
             }
 
-            timeSinceLastChase += Time.deltaTime;
+            timeUpdater();
         }
 
         private void patrolControl()
@@ -67,13 +65,21 @@ namespace RPG.Control
                 {
                     nextPosition = patrol.transform.GetChild(waypointCounter).position;
                     waypointCounter++;
+                    timeSinceLastPatrol = 0;
                 }
                 
                 if(waypointCounter == patrol.transform.childCount)
                      waypointCounter = 0;
 
-                mover.startMoveAction(nextPosition, 0f);
+                if (timeSinceLastPatrol >= patrolTime)
+                    mover.startMoveAction(nextPosition, 0f);
             }
+        }
+
+        private void timeUpdater()
+        {
+            timeSinceLastChase += Time.deltaTime;
+            timeSinceLastPatrol += Time.deltaTime;
         }
 
         private float chaseDistanceControl()
