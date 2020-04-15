@@ -73,6 +73,7 @@ namespace RPG.Combat
         {
             swapTriggerControl("attack","stopAttacking");
             target = null;
+            mover.stopExecution();
         }
 
         private void swapTriggerControl(string triggerToReset,string triggerToStart)
