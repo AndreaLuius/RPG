@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1850409627}
   - component: {fileID: 811480636}
   - component: {fileID: 811480637}
+  - component: {fileID: 2349594608673195568}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -110,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d6b872f18c7da4aad0efbcafa4aeb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeed: 5.6
   navMesh: {fileID: 0}
 --- !u!95 &5689472265122330158
 Animator:
@@ -142,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 753b0c3833b403840b1c44a3008092be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerSpeed: 1
 --- !u!114 &811480636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 2
   timeBetweenAttacks: 4
+  fighterSpeed: 0.8
 --- !u!114 &811480637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,5 +170,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98420b24a73f6d748a727fdb53f30b56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2349594608673195568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342909185641683987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d884b2769cba7688f5864bc1469f5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

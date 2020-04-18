@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
@@ -48,7 +47,7 @@ namespace RPG.Control
             }
             else
             {
-                //checking for the suspicios behavior
+                //checking for the suspicious behavior
                 if(timeSinceLastChase < suspiciosTime)
                     scheduler.straigthStopAction();
                 else
@@ -89,7 +88,7 @@ namespace RPG.Control
                      player.transform.position);
         }
 
-        void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, chaseTargetRange);

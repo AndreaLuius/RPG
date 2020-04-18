@@ -1,70 +1,81 @@
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 
 namespace RPG.Saving
 {
     public class SavingSystem : MonoBehaviour
     {
+        private BinaryFormatter formatter;
+        private Dictionary<string, object> states;//states are the savable entity
+        
+        private void Start()
+        {
+            formatter = new BinaryFormatter();
+            states = new Dictionary<string, object>();
+        }
+        
         public void save(string fileName)
         {
-            var path = getDynamicPath(fileName);
-            Debug.Log($"saving {getDynamicPath(fileName)}");
-            using(FileStream stream = File.Open(path,FileMode.Create))
-            {
-                Transform playerTransform = getPlayerPosition();
-                byte[] buffer = serializeVector(playerTransform.position);
-                stream.Write(buffer, 0, buffer.Length);
-            }
-            
+            string path = getDynamicPath(fileName);
+            savingFileOperation(path);
         }
-
+        
         public void load(string fileName)
         {
-            var path = getDynamicPath(fileName);
-            Debug.Log($"load {getDynamicPath(fileName)}");
-            using(FileStream stream = File.Open(path,FileMode.Open))
-            {
-                byte [] buffer = new byte[stream.Length];
-                stream.Read(buffer,0,buffer.Length);
-
-               Transform transform = getPlayerPosition();
-               transform.position = deserializeVector(buffer);
+            string path = getDynamicPath(fileName);
+            readLoad(path);
+        }
+        
+        #region fileOperation
+        private void savingFileOperation(string path)
+        {
+            using (FileStream stream = File.Open(path, FileMode.Create))
+            {//using because will close the stream when it ends
+                formatter.Serialize(stream, captureState());
             }
         }
-
-        private byte[] serializeVector(Vector3 vector3)
+        private void readLoad(string path)
         {
-            byte[] converted = new byte[12];//every float is 4 we have xzy
+            using (FileStream stream = File.Open(path, FileMode.Open))
+            {
+                restoreState(formatter.Deserialize(stream));
+            }
+        }
+        #endregion
+        
+        /*taking all the entity that has a savable and putting them inside a map*/
+        private Dictionary<string,object> captureState()
+        {
+            foreach (var savable in FindObjectsOfType<SavableEntity>())
+            {
+                states[savable.getUniqueIdentifier()] = savable.captureState();
+            }
+            return states;
+        }
+        
+        /*just taking the value from the dictionary by key
+        and then just putting it at the saved position */
+        private void restoreState(object state)
+        {
+            /*filled by the file*/
+            Dictionary<string, object> deserializedState = (Dictionary<string, object>) state; 
             
-            BitConverter.GetBytes(vector3.x).CopyTo(converted,0);//every flaot takes 4 byte
-            BitConverter.GetBytes(vector3.y).CopyTo(converted, 4);//so we let all that space
-            BitConverter.GetBytes(vector3.z).CopyTo(converted, 8);//for every byte 
-            
-            return converted;
+            foreach (var savable in FindObjectsOfType<SavableEntity>())
+            {
+                savable.restoreState(deserializedState[savable.getUniqueIdentifier()]);
+            }
+
         }
-
-        private Vector3 deserializeVector(byte[] buffer)
-        {
-            Vector3 vector3 = new Vector3();
-            vector3.x = BitConverter.ToSingle(buffer,0);
-            vector3.y = BitConverter.ToSingle(buffer, 4);
-            vector3.z = BitConverter.ToSingle(buffer, 8);
-
-            return vector3;
-        }
-
-        private Transform getPlayerPosition()
-        {
-            return GameObject.FindWithTag("Player").transform;
-        }
-
+        
         private string getDynamicPath(string fileName)
         {
-            /*Application.persistentDataPath takes the dinamycally the absolute path
-            the combine just combines 2 strings (with dinamyc slash based on OS wheres running)*/
-            return Path.Combine(Application.persistentDataPath,fileName + ".sav");
+            /*Application.persistentDataPath takes the dynamically the absolute path
+            the combine just combines 2 strings (with dynamic slash based on OS wheres running)*/
+            return Path.Combine(Application.persistentDataPath, fileName + ".sav");
         }
     }
 }
