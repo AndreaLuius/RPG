@@ -1,20 +1,17 @@
+using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Core
 {
-    public class Healt : MonoBehaviour {
+    public class Healt : MonoBehaviour,ISaveable 
+    {
 
         [SerializeField] float healt = 100f;
-        public bool isDead{get;set;}
-
-        void Start()
-        {
-            isDead = false;    
-        }
+        public bool isDead { get; set; }
 
         public void takeDamage(float hitDamage)
         {
-            /*the maximun value between 2 number
+            /*the maximum value between 2 number
             we have 0 so i cannot go under 0 */
             if(!isDead)
             {
@@ -28,9 +25,28 @@ namespace RPG.Core
             if(healt == 0)
             {
                 GetComponent<Animator>().SetTrigger("die");
-                isDead = true;
                 GetComponent<ActionScheduler>().straigthStopAction();
+                isDead = true;
+                print($"DEAD! : {isDead}");
             } 
         }
+        
+        #region ISavableImplements
+        
+        public object captureState()
+        {
+            return healt;
+        }
+
+        public void restoreState(object state)
+        {
+            healt = (float) state;
+            if (healt <= 0)
+            {
+                death();
+            }
+        }
+        
+        #endregion
     }
 }

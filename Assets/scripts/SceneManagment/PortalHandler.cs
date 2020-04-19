@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using RPG.Saving;
 using UnityEngine.AI;
 
 namespace RPG.SceneManagment
@@ -34,15 +35,21 @@ namespace RPG.SceneManagment
             DontDestroyOnLoad(gameObject);
 
             Fader fader = FindObjectOfType<Fader>();
+            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
 
             yield return fader.fadeOut(fader.fadeOutTime);
+            savingWrapper.save();
 
             //we load the scene 
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            
+            savingWrapper.load();
 
             PortalHandler portal = getPortal();
             
             updatePlayerPosition(portal);
+            
+            savingWrapper.save();
 
             yield return new WaitForSeconds(.3f);
 
@@ -74,6 +81,7 @@ namespace RPG.SceneManagment
         {
             /*getting the player object*/
             GameObject player = GameObject.FindWithTag("Player");
+            player.GetComponent<NavMeshAgent>().enabled = false;
             /*we take the navMesh because if 
             you just change the position of the player
             sometimes it can bug apart, and just 
@@ -83,6 +91,7 @@ namespace RPG.SceneManagment
             player.GetComponent<NavMeshAgent>().Warp(portal.spawnPoint.position);
             /*the rotation doesnt break the navmesh*/
             player.transform.rotation = portal.spawnPoint.rotation;
+            player.GetComponent<NavMeshAgent>().enabled = true;
         }
     }
 }

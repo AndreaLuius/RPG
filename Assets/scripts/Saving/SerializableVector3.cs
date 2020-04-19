@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using System;
 
 namespace RPG.Saving
 {
@@ -15,7 +15,7 @@ namespace RPG.Saving
             this.z = vector.z;
         }
 
-        public Vector3 toVector()
+        public Vector3 ToVector()
         {
             return new Vector3(x, y, z);
         }

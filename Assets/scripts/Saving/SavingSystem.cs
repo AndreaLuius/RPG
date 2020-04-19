@@ -1,80 +1,93 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using System;
-using System.IO;
-using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 
 namespace RPG.Saving
 {
     public class SavingSystem : MonoBehaviour
     {
-        private BinaryFormatter formatter;
-        private Dictionary<string, object> states;//states are the savable entity
-        
-        private void Start()
+        private const string lastSceneBuildIndex = "lastSceneBuildIndex";
+
+        public IEnumerator loadLastScene(string fileName)
         {
-            formatter = new BinaryFormatter();
-            states = new Dictionary<string, object>();
+            Dictionary<string, object> state = loadFile(fileName);
+            int buildIndex = SceneManager.GetActiveScene().buildIndex;
+            
+            if (state.ContainsKey(lastSceneBuildIndex))
+                buildIndex = (int)state[lastSceneBuildIndex];
+            
+            yield return SceneManager.LoadSceneAsync(buildIndex);
+            restoreState(state);
+        }
+
+        public void save(string saveFile)
+        {
+            Dictionary<string, object> state = loadFile(saveFile);
+            captureState(state);
+            this.saveFile(saveFile, state);
+        }
+
+        public void load(string fineName)
+        {
+            restoreState(loadFile(fineName));
         }
         
-        public void save(string fileName)
+        #region FileOperation
+        
+        public void delete(string saveFile)
+        {
+            File.Delete(getDynamicPath(saveFile));
+        }
+
+        private void saveFile(string fileName, object state)
         {
             string path = getDynamicPath(fileName);
-            savingFileOperation(path);
-        }
-        
-        public void load(string fileName)
-        {
-            string path = getDynamicPath(fileName);
-            readLoad(path);
-        }
-        
-        #region fileOperation
-        private void savingFileOperation(string path)
-        {
+            print("Saving to " + path);
             using (FileStream stream = File.Open(path, FileMode.Create))
-            {//using because will close the stream when it ends
-                formatter.Serialize(stream, captureState());
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, state);
             }
         }
-        private void readLoad(string path)
+        
+        private Dictionary<string, object> loadFile(string saveFile)
         {
+            string path = getDynamicPath(saveFile);
+            if (!File.Exists(path))
+                return new Dictionary<string, object>();
+            
             using (FileStream stream = File.Open(path, FileMode.Open))
             {
-                restoreState(formatter.Deserialize(stream));
+                BinaryFormatter formatter = new BinaryFormatter();
+                return (Dictionary<string, object>)formatter.Deserialize(stream);
             }
         }
         #endregion
-        
-        /*taking all the entity that has a savable and putting them inside a map*/
-        private Dictionary<string,object> captureState()
-        {
-            foreach (var savable in FindObjectsOfType<SavableEntity>())
-            {
-                states[savable.getUniqueIdentifier()] = savable.captureState();
-            }
-            return states;
-        }
-        
-        /*just taking the value from the dictionary by key
-        and then just putting it at the saved position */
-        private void restoreState(object state)
-        {
-            /*filled by the file*/
-            Dictionary<string, object> deserializedState = (Dictionary<string, object>) state; 
-            
-            foreach (var savable in FindObjectsOfType<SavableEntity>())
-            {
-                savable.restoreState(deserializedState[savable.getUniqueIdentifier()]);
-            }
 
+        private void captureState(Dictionary<string, object> state)
+        {
+            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
+                state[saveable.getUniqueIdentifier()] = saveable.captureState();
+
+            state[lastSceneBuildIndex] = SceneManager.GetActiveScene().buildIndex;
         }
-        
+
+        private void restoreState(Dictionary<string, object> state)
+        {
+            string id = "";
+            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
+            {
+                id = saveable.getUniqueIdentifier();
+                if (state.ContainsKey(id))
+                    saveable.restoreState(state[id]);
+            }
+        }
+
         private string getDynamicPath(string fileName)
         {
-            /*Application.persistentDataPath takes the dynamically the absolute path
-            the combine just combines 2 strings (with dynamic slash based on OS wheres running)*/
             return Path.Combine(Application.persistentDataPath, fileName + ".sav");
         }
     }

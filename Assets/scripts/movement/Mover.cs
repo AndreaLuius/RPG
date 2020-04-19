@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
+using RPG.Saving;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour,IAction
+    public class Mover : MonoBehaviour,IAction,ISaveable
     {
         [SerializeField] float maxSpeed = 5.6f;
         public NavMeshAgent navMesh;
@@ -22,7 +23,8 @@ namespace RPG.Movement
 
         private void Update()
         {
-            if(healt.isDead) navMesh.enabled = false;
+            if (healt.isDead)
+                navMesh.enabled = false;
             
             movementAnimation();
         }
@@ -58,5 +60,24 @@ namespace RPG.Movement
         {
             navMesh.ResetPath();
         }
+        
+        
+        #region ISavableImplements
+        
+        public object captureState()
+        {
+            return new SerializableVector3(transform.position);
+        }
+        
+        public void restoreState(object state)
+        { 
+            SerializableVector3 position = (SerializableVector3)state;
+            GetComponent<NavMeshAgent>().enabled = false;
+            transform.position = position.ToVector();
+            GetComponent<NavMeshAgent>().enabled = true;
+            GetComponent<ActionScheduler>().straigthStopAction();
+        }
+        
+        #endregion
     }
 }
