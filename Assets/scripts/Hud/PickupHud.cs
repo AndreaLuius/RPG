@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.Hud
 {
-    public class Huds : MonoBehaviour
+    public class PickupHud : MonoBehaviour
     {
         [SerializeField] GameObject panel;
 

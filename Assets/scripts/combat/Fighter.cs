@@ -8,7 +8,8 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour,IAction
     {
-        [SerializeField] private Transform whereToSpawn = null;
+        [SerializeField] private Transform rightTransform = null;
+        [SerializeField] private Transform leftTransform;
         [SerializeField] private Weapon defaultWeapon = null;
         [SerializeField] private Weapon currentWeapon = null;
         [SerializeField] private float fighterSpeed = .8f;
@@ -35,7 +36,13 @@ namespace RPG.Combat
         {
             lastAttackTime += Time.deltaTime;
 
-            if(target == null || target.isDead) return; 
+            if (target == null) return;
+            if (target.isDead)
+            {
+                target.GetComponent<CapsuleCollider>().enabled = false;
+                return;
+            }
+ 
 
             if(!rangeControl())
             {
@@ -80,7 +87,7 @@ namespace RPG.Combat
             if (weapon != null)
             {
                 currentWeapon = weapon;
-                weapon.spawn(whereToSpawn,animator);
+                weapon.spawn(rightTransform,leftTransform,animator);
             }
 
         }
@@ -99,8 +106,20 @@ namespace RPG.Combat
         #region AnimationEvents
         private void Hit()
         {
-            if(target != null)
-                target.takeDamage(currentWeapon.Damage);
+            if (target != null)
+            {//check if the weapon has projectiles or not
+                if (currentWeapon.hasProjectile())
+                {
+                    currentWeapon.shootProjectiles(
+                        rightTransform,leftTransform,target);
+                }else
+                    target.takeDamage(currentWeapon.Damage);
+            }
+        }
+
+        private void Shoot()
+        {
+            Hit();
         }
         #endregion
         

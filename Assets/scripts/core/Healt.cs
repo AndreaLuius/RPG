@@ -27,7 +27,6 @@ namespace RPG.Core
                 GetComponent<Animator>().SetTrigger("die");
                 GetComponent<ActionScheduler>().straigthStopAction();
                 isDead = true;
-                print($"DEAD! : {isDead}");
             } 
         }
         

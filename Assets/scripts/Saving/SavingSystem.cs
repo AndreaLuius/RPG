@@ -15,10 +15,10 @@ namespace RPG.Saving
         {
             Dictionary<string, object> state = loadFile(fileName);
             int buildIndex = SceneManager.GetActiveScene().buildIndex;
-            
+
             if (state.ContainsKey(lastSceneBuildIndex))
                 buildIndex = (int)state[lastSceneBuildIndex];
-            
+
             yield return SceneManager.LoadSceneAsync(buildIndex);
             restoreState(state);
         }
@@ -34,9 +34,9 @@ namespace RPG.Saving
         {
             restoreState(loadFile(fineName));
         }
-        
+
         #region FileOperation
-        
+
         public void delete(string saveFile)
         {
             File.Delete(getDynamicPath(saveFile));
@@ -52,13 +52,13 @@ namespace RPG.Saving
                 formatter.Serialize(stream, state);
             }
         }
-        
+
         private Dictionary<string, object> loadFile(string saveFile)
         {
             string path = getDynamicPath(saveFile);
             if (!File.Exists(path))
                 return new Dictionary<string, object>();
-            
+
             using (FileStream stream = File.Open(path, FileMode.Open))
             {
                 BinaryFormatter formatter = new BinaryFormatter();

@@ -6,7 +6,7 @@ namespace RPG.Combat
     public class WeaponPickup: MonoBehaviour
     {
         [SerializeField] private Weapon weapon;
-        [SerializeField] private Huds hud;
+        [SerializeField] private PickupHud pickupHud;
         private Fighter fighter = null;
         public bool isCollectible = false;
         
@@ -20,7 +20,7 @@ namespace RPG.Combat
             if (isCollectible && Input.GetKeyDown(KeyCode.F))
             {
                 fighter.equipWeapon(weapon);
-                hud.closePanel();
+                pickupHud.closePanel();
                 Destroy(gameObject);
             }
         }
@@ -29,7 +29,7 @@ namespace RPG.Combat
         {
             if (other.gameObject.tag.Equals("Player"))
             {
-                hud.openPanel();
+                pickupHud.openPanel();
                 isCollectible = true;
                 fighter = other.GetComponent<Fighter>();
             }
@@ -37,7 +37,7 @@ namespace RPG.Combat
 
         private void OnTriggerExit(Collider other)
         {
-            hud.closePanel();
+            pickupHud.closePanel();
             isCollectible = false;
             fighter = null;
         }

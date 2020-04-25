@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6197cca27837421dab6a9df726f1b9e3, type: 3}
+  m_Name: LightBow
+  m_EditorClassIdentifier: 
+  weaponPrefab: {fileID: 5763976065204360590, guid: 7fdc5f18d05012be2b616f7472fec51c,
+    type: 3}
+  animatorOverrideController: {fileID: 22100000, guid: 40a73b478c72cbe8a8deb58cf858a610,
+    type: 2}
+  range: 12
+  damage: 7
+  timeBetweenAttacks: 1.5
+  isRrightHanded: 0
+  projectiles: {fileID: 1045595743496072610, guid: fdb0caf75efb365d4a0813da8ae2a5b3,
+    type: 3}

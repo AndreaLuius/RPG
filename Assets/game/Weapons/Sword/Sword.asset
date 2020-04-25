@@ -19,3 +19,4 @@ MonoBehaviour:
   range: 1
   damage: 10
   timeBetweenAttacks: 0.8
+  isRrightHanded: 1
